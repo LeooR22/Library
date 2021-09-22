@@ -57,35 +57,21 @@ defaultBooks()
 var topTable = ["Title", "Author", "Pages", "Status"];
 
 // Estructure of object table
-function buildTable(labels, objects, container) {
-    var table = document.createElement('table');
-    var thead = document.createElement('thead');
-    var tbody = document.createElement('tbody');
-  
-    var theadTr = document.createElement('tr');
-    for (var i = 0; i < labels.length; i++) {
-      var theadTh = document.createElement('th');
-      theadTh.innerHTML = labels[i];
-      theadTr.appendChild(theadTh);
-    }
-    thead.appendChild(theadTr);
-    table.appendChild(thead);
-  
-    for (j = 0; j < objects.length; j++) {
-      var tbodyTr = document.createElement('tr');
-      for (k = 0; k < labels.length; k++) {
-        var tbodyTd = document.createElement('td');
-        tbodyTd.innerHTML = objects[j][labels[k].toLowerCase()];
-        tbodyTr.appendChild(tbodyTd);
-      }
-      tbody.appendChild(tbodyTr);
-    }
-    table.appendChild(tbody);
-  
-    container.appendChild(table);
-  }
+function render() {
+  //checkLocalStorage();
+  $tableBody.innerHTML = "";
+  myLibrary.forEach((book) => {
+    const htmlBook = `
+      <tr>
+        <td>${book.title}</td>
+        <td>${book.author}</td>
+        <td><button class="status-button">${book.status}</button></td>
+        <td><button class="delete">delete</button></td>
+      </tr>
+      `;
+    $tableBody.insertAdjacentHTML("afterbegin", htmlBook);
+  });
+}
 
-//
-
-  buildTable(topTable, myLibrary, document.getElementById('myLibraryTable'));
+render();
 
