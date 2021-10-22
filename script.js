@@ -5,11 +5,22 @@ const txtTitle = document.getElementById("title")
 const txtAuthor = document.getElementById("author")
 const txtPages = document.getElementById("pages")
 const txtReadStatus = document.getElementById("readStatus")
+const $tableBody = document.querySelector("#book-table-body")
 //
 const btnSubmit = document.getElementById("submit")
 
+const btnStatus = document.querySelectorAll (".status-button")
+const btnDelete = document.querySelector(".delete")
+
 btnSubmit.addEventListener("click", uploadBook)
 
+
+// btnDelete.addEventListener("click", deleteBook)
+
+
+function deleteBook(){
+  console.log("Hola mundo")
+}
 
 // Funcion constructor
 function book(title, author, pages, status) {
@@ -18,7 +29,7 @@ function book(title, author, pages, status) {
     this.pages = pages;
     this.status = status;
     /* this.info = function() {
-        console.log(title + " by " + author + ", " + pages + " pages, " 
+       tableBody console.log(title + " by " + author + ", " + pages + " pages, " 
                             + read);
     } */
 }
@@ -31,9 +42,7 @@ function uploadBook(){
     txtTitle.value = "";
     txtAuthor.value = "";
     txtPages.value = "";
-    txtReadStatus.value = "";
-    document.getElementById("myLibraryTable").innerHTML = null
-    buildTable(topTable, myLibrary, document.getElementById('myLibraryTable'));
+    render()
 }
 //
 
@@ -65,6 +74,7 @@ function render() {
       <tr>
         <td>${book.title}</td>
         <td>${book.author}</td>
+        <td>${book.pages}</td>
         <td><button class="status-button">${book.status}</button></td>
         <td><button class="delete">delete</button></td>
       </tr>
@@ -72,6 +82,5 @@ function render() {
     $tableBody.insertAdjacentHTML("afterbegin", htmlBook);
   });
 }
-
 render();
 
