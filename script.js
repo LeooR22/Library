@@ -2,7 +2,29 @@ const formulario = document.querySelector("#formulario");
 const renderBook = document.querySelector("#renderBook");
 const templateBook = document.querySelector("#templateBook").content;
 const alert = document.querySelector(".alert-danger");
-let books = [];
+let books = [
+  {
+    title: "The Little Prince",
+    author: "Antoine de Saint-Exupery\t",
+    pages: "96",
+    status: "read",
+    bookID: "123",
+  },
+  {
+    title: "Don Quixote",
+    author: "Miguel de Cervantes\t",
+    pages: "1345",
+    status: "unread",
+    bookID: "1234",
+  },
+  {
+    title: "The Hobbit\t",
+    author: "J.R.R. Tolkien\t",
+    pages: "295",
+    status: "unread",
+    bookID: "12345",
+  },
+];
 
 class Book {
   constructor(title, author, pages, status) {
