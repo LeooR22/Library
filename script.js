@@ -1,86 +1,97 @@
-let myLibrary = [];
+const formulario = document.querySelector("#formulario");
+const renderBook = document.querySelector("#renderBook");
+const templateBook = document.querySelector("#templateBook").content;
+const alert = document.querySelector(".alert-danger");
+let books = [];
 
-//vinculacion con inputs html
-const txtTitle = document.getElementById("title")
-const txtAuthor = document.getElementById("author")
-const txtPages = document.getElementById("pages")
-const txtReadStatus = document.getElementById("readStatus")
-const $tableBody = document.querySelector("#book-table-body")
-//
-const btnSubmit = document.getElementById("submit")
-
-const btnStatus = document.querySelectorAll (".status-button")
-const btnDelete = document.querySelector(".delete")
-
-btnSubmit.addEventListener("click", uploadBook)
-
-
-// btnDelete.addEventListener("click", deleteBook)
-
-
-function deleteBook(){
-  console.log("Hola mundo")
-}
-
-// Funcion constructor
-function book(title, author, pages, status) {
+class Book {
+  constructor(title, author, pages, status) {
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.status = status;
-    /* this.info = function() {
-       tableBody console.log(title + " by " + author + ", " + pages + " pages, " 
-                            + read);
-    } */
+    this.bookID = `${Date.now()}`;
+  }
 }
-//
 
-// Funcion Agregar libro a myLibrary
-function uploadBook(){
-    newBook = new book(txtTitle.value, txtAuthor.value, txtPages.value, txtReadStatus.value)
-    myLibrary.push(newBook);
-    txtTitle.value = "";
-    txtAuthor.value = "";
-    txtPages.value = "";
-    render()
-}
-//
+const renderBooks = () => {
+  localStorage.setItem("books", JSON.stringify(books));
 
-//  carga de defaultBooks
-function defaultBooks(){
+  renderBook.textContent = "";
 
-theHobbit = new book("The Hobbit", "J.R.R. Tolkien", 295, "Unread")
-myLibrary.push(theHobbit)
+  const fragment = document.createDocumentFragment();
 
-donQuixote = new book("Don Quixote", "Miguel de Cervantes", 1345, "Unread")
-myLibrary.push(donQuixote)
+  books.forEach((item) => {
+    const clone = templateBook.cloneNode(true);
 
-theLittlePrince = new book("The Little Prince", "Antoine de Saint-Exupery", 96, "Read")
-myLibrary.push(theLittlePrince)
-}
-defaultBooks()
-//
+    clone.querySelector("h4").textContent = item.title;
+    clone.querySelector("h5").textContent = item.author;
+    clone.querySelector("h6").textContent = `Pages: ${item.pages}`;
+    clone.querySelector("#btnStatusRead").dataset.id = item.bookID;
+    clone.querySelector("#btnStatusUnread").dataset.id = item.bookID;
+    clone.querySelector("#btnDelete").dataset.id = item.bookID;
 
-// Creation of myLibrary table
+    if (item.status === "read") {
+      clone.querySelector("#btnStatusRead").classList.remove("d-none");
+      clone.querySelector("#btnStatusUnread").classList.add("d-none");
+    } else {
+      clone.querySelector("#btnStatusRead").classList.add("d-none");
+      clone.querySelector("#btnStatusUnread").classList.remove("d-none");
+    }
 
-var topTable = ["Title", "Author", "Pages", "Status"];
-
-// Estructure of object table
-function render() {
-  //checkLocalStorage();
-  $tableBody.innerHTML = "";
-  myLibrary.forEach((book) => {
-    const htmlBook = `
-      <tr>
-        <td>${book.title}</td>
-        <td>${book.author}</td>
-        <td>${book.pages}</td>
-        <td><button class="status-button">${book.status}</button></td>
-        <td><button class="delete">delete</button></td>
-      </tr>
-      `;
-    $tableBody.insertAdjacentHTML("afterbegin", htmlBook);
+    fragment.appendChild(clone);
   });
-}
-render();
+  renderBook.appendChild(fragment);
+};
 
+formulario.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  alert.classList.add("d-none");
+
+  const datos = new FormData(formulario);
+  const [title, author, pages, status] = [...datos.values()];
+
+  if (!title.trim() || !author.trim() || !pages.trim()) {
+    alert.classList.remove("d-none");
+    return;
+  }
+
+  const book = new Book(title, author, pages, status);
+
+  books.push(book);
+
+  renderBooks();
+});
+
+document.addEventListener("click", (e) => {
+  if (e.target.dataset.id) {
+    if (e.target.matches(".btn-info")) {
+      books.map((item) => {
+        if (item.bookID === e.target.dataset.id) {
+          item.status = "unread";
+        }
+        return item;
+      });
+    }
+    if (e.target.matches(".btn-secondary")) {
+      books.map((item) => {
+        if (item.bookID === e.target.dataset.id) {
+          item.status = "read";
+        }
+        return item;
+      });
+    }
+  }
+  if (e.target.matches(".btn-danger")) {
+    books = books.filter((item) => item.bookID !== e.target.dataset.id);
+  }
+  renderBooks();
+});
+
+document.addEventListener("DOMContentLoaded", (e) => {
+  if (localStorage.getItem("books")) {
+    books = JSON.parse(localStorage.getItem("books"));
+    renderBooks();
+  }
+});
