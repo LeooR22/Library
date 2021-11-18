@@ -5,21 +5,21 @@ const alert = document.querySelector(".alert-danger");
 let books = [
   {
     title: "The Little Prince",
-    author: "Antoine de Saint-Exupery\t",
+    author: "Antoine de Saint-Exupery",
     pages: "96",
     status: "read",
     bookID: "123",
   },
   {
     title: "Don Quixote",
-    author: "Miguel de Cervantes\t",
+    author: "Miguel de Cervantes",
     pages: "1345",
     status: "unread",
     bookID: "1234",
   },
   {
-    title: "The Hobbit\t",
-    author: "J.R.R. Tolkien\t",
+    title: "The Hobbit",
+    author: "J.R.R. Tolkien",
     pages: "295",
     status: "unread",
     bookID: "12345",
